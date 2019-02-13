@@ -1,0 +1,154 @@
+<div class="file-history__container">
+  <div class="file-history-main" *ngIf="!diffString">
+    <button mat-icon-button color="primary" (click)="onBack()">
+      <mat-icon aria-label="Back">arrow_back</mat-icon>
+    </button>
+    <div class="file-name__container">
+      <mat-chip-list
+        ><mat-chip color="primary" selected>{{
+          filePath
+        }}</mat-chip></mat-chip-list
+      >
+    </div>
+    <div class="filter-fields">
+      <mat-form-field class="filter-field filter-hash">
+        <input
+          matInput
+          placeholder="Hash"
+          [(ngModel)]="filterHashId"
+          [disabled]="!dataSource"
+          (change)="onChangeFilteredHash()"
+        />
+      </mat-form-field>
+      <mat-form-field class="filter-field">
+        <mat-select
+          placeholder="Author(s)"
+          [formControl]="authors"
+          [(value)]="selected"
+          multiple
+          (selectionChange)="filterByAuthor(selected)"
+        >
+          <mat-option *ngFor="let author of authorList" [value]="author">{{
+            author
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="filter-field">
+        <input
+          matInput
+          [matDatepicker]="fromDatePicker"
+          placeholder="From"
+          [value]="date.value"
+          [(ngModel)]="selectedFromDate"
+          (dateChange)="filterByFromDate()"
+          [disabled]="!dataSource"
+          (change)="clearToDate()"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="fromDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #fromDatePicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field class="filter-field">
+        <input
+          matInput
+          [matDatepicker]="toDatePicker"
+          placeholder="To"
+          [value]="date.value"
+          [(ngModel)]="selectedToDate"
+          (dateChange)="filterByToDate()"
+          [disabled]="!selectedFromDate || selectedFromDate == ''"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="toDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #toDatePicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="commit-log__container">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container
+          matColumnDef="{{ column }}"
+          *ngFor="let column of columnsToDisplay"
+        >
+          <ng-container *ngIf="isSortable(column); else no_sort">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ column | titlecase }}
+            </th>
+          </ng-container>
+          <ng-template #no_sort
+            ><th mat-header-cell *matHeaderCellDef>
+              {{ column | titlecase }}
+            </th></ng-template
+          >
+          <td mat-cell *matCellDef="let element">
+            <ng-container *ngIf="column == 'compare'; else other_than_compare">
+              <mat-checkbox
+                color="primary"
+                (change)="compareTwoCommits($event, element[column])"
+                [disabled]="disableOtherHashId(element[column])"
+              ></mat-checkbox>
+            </ng-container>
+            <ng-template #other_than_compare>
+              <ng-container *ngIf="column == 'hash'; else other_column">
+                <div class="hash__container">
+                  <span class="clipboard-icon__container">
+                    <mat-svg-icon
+                      class="clipboard-icon"
+                      icon="clipboard"
+                      button="true"
+                      [copy-to-clipboard]="element[column]"
+                      haltOtherEvents="true"
+                    ></mat-svg-icon>
+                  </span>
+                  <span class="hashid__container">{{ element[column] }}</span>
+                </div>
+              </ng-container>
+              <ng-template #other_column> {{ element[column] }} </ng-template>
+            </ng-template>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+        <tr
+          mat-row
+          *matRowDef="let element; columns: columnsToDisplay"
+          class="example-element-row"
+        ></tr>
+      </table>
+
+      <button
+        *ngIf="comparableCommits?.length >= 2"
+        mat-icon-button
+        color="primary"
+        (click)="onComapre()"
+        [ngStyle]="{
+          position: 'fixed',
+          left: getCompareButtonLeftPosition(),
+          top: getCompareButtonTopPosition()
+        }"
+      >
+        <mat-icon aria-label="Back">compare</mat-icon>
+      </button>
+      <div [hidden]="disablePagination()">
+        <mat-paginator
+          [pageSizeOptions]="[10, 15, 20]"
+          showFirstLastButtons
+        ></mat-paginator>
+      </div>
+    </div>
+  </div>
+  <ng-container *ngIf="diffString">
+    <button mat-icon-button color="primary" (click)="onBack()">
+      <mat-icon aria-label="Back">arrow_back</mat-icon>
+    </button>
+    <git-diff
+      [diffInput]="diffString"
+      [compareSideBySide]="true"
+    ></git-diff>
+  </ng-container>
+</div>

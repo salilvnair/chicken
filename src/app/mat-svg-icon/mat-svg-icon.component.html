@@ -1,0 +1,8 @@
+<ng-container *ngIf="button; else is_icon">
+  <button mat-icon-button color="primary" (click)="onClick($event)">
+    <mat-icon [color]="color" [svgIcon]="icon"></mat-icon>
+  </button>
+</ng-container>
+<ng-template #is_icon>
+  <mat-icon [color]="color" [svgIcon]="icon"></mat-icon>
+</ng-template>

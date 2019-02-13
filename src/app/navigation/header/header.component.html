@@ -1,0 +1,47 @@
+<mat-toolbar color="primary" class="header-bar">
+  <div fxHide.gt-sm fxShow>
+    <button mat-icon-button (click)="onToggleSidenav()"><mat-icon>menu</mat-icon></button>
+  </div>
+  <div fxFlex fxLayout fxLayoutAlign="flex" fxHide fxShow.gt-sm>
+      <a id="chicken_home" mat-button>
+          <img class="chicken_logo" src="assets/images/logo/chicken.png" alt="icard" /></a
+        >
+    <ul fxLayout fxLayoutGap="50px" class="navigation-items">
+      <li>
+          <a
+            id="chicken_dashboard"
+            routerLink="/dashboard"
+            [ngStyle]="getHighlightColor('/dashboard')"
+            (click)="currentlyActive('/dashboard')"
+            mat-button
+            >Dashboard</a
+          >
+        </li>
+        <li>
+            <a
+              id="chicken_gitHistory"
+              routerLink="/gitHistory"
+              [ngStyle]="getHighlightColor('/edit-profile')"
+              (click)="currentlyActive('/edit-profile')"
+              mat-button
+              >Git History</a
+            >
+          </li>
+    </ul>
+  </div>
+
+  <div fxFlex fxLayout fxLayoutAlign="flex-end" fxHide fxShow.gt-sm>
+    <ul fxLayout fxLayoutGap="100px" class="navigation-items">
+      <li>
+        <a
+          id="chicken_about-us"
+          mat-button
+          routerLink="/about"
+          [ngStyle]="getHighlightColor('/about')"
+          (click)="currentlyActive('/about')"
+          >About Us</a
+        >
+      </li>
+    </ul>
+  </div>
+</mat-toolbar>

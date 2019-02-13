@@ -1,0 +1,9 @@
+<mat-sidenav-container>
+  <mat-sidenav #sidenav role="navigation">
+    <icard-sidenav (closeSideNav)="sidenav.close()"></icard-sidenav>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <icard-header id="headerNav" (sideNavToggle)="sidenav.toggle()"></icard-header>
+    <main><router-outlet></router-outlet></main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

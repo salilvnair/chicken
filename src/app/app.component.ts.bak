@@ -1,0 +1,25 @@
+import { Component, OnInit } from '@angular/core';
+import { ElectronService } from 'ngx-electron';
+import { WindowsBashUtil } from './helper/windows';
+import { ThreadUtil } from './helper/thread.util';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements OnInit{
+
+  constructor(private electronService:ElectronService,private threadUtil:ThreadUtil){}
+
+  ngOnInit(): void {
+    let bashUtil = new WindowsBashUtil();
+    bashUtil.init(this.electronService,this.threadUtil);
+    bashUtil.execute("tail -100f log.txt",true).subscribe(data=>{
+      console.log(data);
+    });
+  }
+  
+
+  title = 'chicken';
+}
