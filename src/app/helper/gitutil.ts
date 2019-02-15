@@ -100,11 +100,13 @@ export class GitUtil {
       gitRootPath +
       "' && git log " +
       branchCmd +
-      ' --pretty=format:"{\\"author\\":\\"%an\\",\\"hash\\":\\"%H\\",\\"message\\":\\"%f\\",\\"date\\":\\"%ad\\"}" --date=format:%m/%d/%Y ' +
+      ' --pretty=format:"{\\"checked\\":false,\\"select\\":\\"%H\\",\\"author\\":\\"%an\\",\\"hash\\":\\"%H\\",\\"message\\":\\"%f\\",\\"date\\":\\"%ad\\"}" --date=format:%m/%d/%Y ' +
       mergeCmd;
     //console.log(gitLogCmd);
     return bashUtil.executeCommand(gitLogCmd, true);
   }
+
+  
   static gitGetBranches(gitRootPath: string, bashUtil: BashUtil) {
     let gitListRemoteBranchCmd = 'cd "' + gitRootPath + '" && git branch -r';
     return bashUtil.executeCommand(gitListRemoteBranchCmd, true);

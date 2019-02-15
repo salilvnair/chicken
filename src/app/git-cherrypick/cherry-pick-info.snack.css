@@ -1,0 +1,9 @@
+.cherry__container{
+    padding: 10px;
+}
+
+.close__btn{
+    position: absolute;
+    right:-10px;
+    top:-10px;
+}

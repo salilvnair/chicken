@@ -42,25 +42,26 @@ tr.example-element-row:not(.example-expanded-row):active {
   align-items: center;
 }
 
-.git-history__container {
-  /* border: 8px solid #3f51b5;
-  height: 765px; */
+.mat-column-select {
+  border-right: 1px solid grey;
+  border-left: 1px solid grey;
+  align-self: center;
+  align-items: center;
+  padding: 0px;
+  padding-left: 34px !important;
+  width: 43px;
 }
-
-/* .mat-table {
-    overflow: auto;
-    max-height: 500px;
-  } */
-
 .mat-column-author {
   border-right: 1px solid grey;
   border-left: 1px solid grey;
   align-self: stretch;
+  width: 180px;
+  text-align: center;
 }
 .mat-column-hash {
   border-right: 1px solid grey;
   align-self: stretch;
-  width: 380px;
+  width: 350px;
   text-align: center;
 }
 .mat-column-message {

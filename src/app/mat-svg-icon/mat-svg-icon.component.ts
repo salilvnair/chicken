@@ -46,6 +46,12 @@ export class MatSvgIconComponent implements OnInit {
         "assets/icons/history.svg"
       )
     );
+    this.matIconRegistry.addSvgIcon(
+      "cherry-pick",
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        "assets/icons/cherry-pick.svg"
+      )
+    );
   }
   @Input("icon") icon: string;
   @Input("color") color: string = "primary";

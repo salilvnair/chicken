@@ -1,0 +1,17 @@
+.source__hashes {
+    border: 1px solid red;
+    height: auto;
+    min-height: 100%;
+    width: 100%;
+}
+
+.target__hashes{
+    border: 1px solid green;
+    height: auto;
+    min-height: 100%;
+    width: 100%;
+}
+
+.pick__container{
+    height: 90vh;
+}

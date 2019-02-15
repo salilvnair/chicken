@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, ViewChildren, QueryList } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ElectronService } from "ngx-electron";
 import { MacBashUtil } from "../helper/macos";
@@ -6,7 +6,7 @@ import { WindowsBashUtil } from "../helper/windows";
 import { GitUtil } from "../helper/gitutil";
 import { BashUtil } from "../helper/bash";
 import { GitLogModel } from "../helper/model/git-log.model";
-import { MatPaginator, MatTableDataSource, MatSort } from "@angular/material";
+import { MatPaginator, MatTableDataSource, MatSort, MatCheckboxChange, MatSnackBar, MatCheckbox } from "@angular/material";
 import {
   animate,
   state,
@@ -21,6 +21,9 @@ import {
 import { SharedData } from "../shared/shared-data.service";
 import { Router } from "@angular/router";
 import { ThreadUtil } from "../helper/thread.util";
+import { GitCherrypickComponent } from "../git-cherrypick/git-cherrypick.component";
+import { GitCherryPickInfoSnack } from "../git-cherrypick/git-cherrypick-info.snack";
+import { ChickenUtil } from "../helper/chicken.util";
 
 const MODIFIED = "M";
 const DELETED = "D";
@@ -50,9 +53,11 @@ export class GitHistoryComponent implements OnInit {
   bashUtil: BashUtil;
   date = new Date();
   gitRootPath: string;
+  cherryPickInfo:any;
   authors = new FormControl();
   authorList: string[] = [];
   branchList: string[] = [];
+  selectedCommitIds: string[] = [];
   selectedAuthors: string[] = [];
   selectedFromDate: string;
   selectedBranch: string = "master";
@@ -70,11 +75,14 @@ export class GitHistoryComponent implements OnInit {
   selectedFilterOption = "hidemerges";
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('selectAllCommitCheckBox') selectAllCommitCheckBox: MatCheckbox;
+  @ViewChildren(MatCheckbox) checkBoxes: QueryList<MatCheckbox>
   constructor(
     private electronService: ElectronService,
     private threadUtil:ThreadUtil,
     private sharedData: SharedData,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
   ngOnInit() {
     this.init();
@@ -146,7 +154,9 @@ export class GitHistoryComponent implements OnInit {
       });
       self.authorList = self.prepareAuthorList(self.gitLogList);
       //self.gitLogList = gitLogJsonDataList;
+      self.columnsToDisplay = [];
       self.columnsToDisplay = Object.keys(self.gitLogList[0]);
+      ChickenUtil.remove(self.columnsToDisplay,"checked");
       self.dataSource = new MatTableDataSource<GitLogModel>();
       self.dataSource.data = self.gitLogList;
       //console.log(self.paginator);
@@ -219,7 +229,7 @@ export class GitHistoryComponent implements OnInit {
   }
 
   isSortable(column) {
-    if (column == "hash" || column == "message") {
+    if (column == "select" ||column == "hash" || column == "message") {
       return false;
     }
     return true;
@@ -380,4 +390,50 @@ export class GitHistoryComponent implements OnInit {
   onChangeFilteredHash() {
     this.dataSource.filter = this.filterHashId;
   }
+
+  onSelectAllCommits(event:MatCheckboxChange){
+    this.checkBoxes.forEach(checkBox=>{
+      if(checkBox.name=="select"){
+        if(event.checked){
+          checkBox.checked = true;
+        }
+        else{
+          checkBox.checked = false;
+        }
+        let gitLogFound = this.gitLogList.find(gitLog=>gitLog.hash ===checkBox.id);
+        gitLogFound.checked = checkBox.checked ;     
+      }
+    })
+    if(event.checked){
+      this.onSelectCommits();
+    }
+  }
+
+  onNextGitLogs(event:any){
+    this.selectAllCommitCheckBox.checked=false;
+  }
+
+  onSelectCommits(){
+    let anyChecked = false;
+    this.checkBoxes.forEach(checkBox=>{
+      if(checkBox.name=="select"){
+        if(checkBox.checked){
+          anyChecked = true;
+        }
+      }
+    })
+    if(!this.cherryPickInfo && anyChecked){
+       let cherryPickInfoRef = this.snackBar.openFromComponent(GitCherryPickInfoSnack,
+        {
+          panelClass:['info-snackbar']
+        });
+       cherryPickInfoRef.afterDismissed().subscribe(()=>{
+        this.cherryPickInfo = null;
+       })
+       this.cherryPickInfo = cherryPickInfoRef;
+    }
+  }
+
+
+
 }

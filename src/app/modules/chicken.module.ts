@@ -17,6 +17,8 @@ import { SharedData } from "../shared/shared-data.service";
 import { ChickenRoutingModule } from "../routes/chicken.routes";
 import { SidenavComponent } from "../navigation/sidenav/sidenav.component";
 import { HeaderComponent } from "../navigation/header/header.component";
+import { GitCherrypickComponent } from '../git-cherrypick/git-cherrypick.component';
+import { GitCherryPickInfoSnack } from "../git-cherrypick/git-cherrypick-info.snack";
 
 const IMPORT_EXPORT_ARRAY = [
     BrowserModule,
@@ -29,13 +31,15 @@ const IMPORT_EXPORT_ARRAY = [
 ];
 
 const COMPONENT_DECLARATION_EXPORT_ARRAY = [
+    HeaderComponent,
+    SidenavComponent,
     DashboardComponent,
     MatSvgIconComponent,
     FileHistoryComponent,
     GitHistoryComponent,
     GitDiffComponent,
-    SidenavComponent,
-    HeaderComponent
+    GitCherrypickComponent,
+    GitCherryPickInfoSnack
 ];
   
 const DIRECTIVE_DECLARATION_EXPORT_ARRAY = [
@@ -52,11 +56,14 @@ const PROVIDER_ARRAY = [
     SharedData
 ];
 
+const ENTY_COMPONENT_ARRAY = [
+    GitCherryPickInfoSnack
+];
 @NgModule({
     declarations:[
         COMPONENT_DECLARATION_EXPORT_ARRAY,
         DIRECTIVE_DECLARATION_EXPORT_ARRAY,
-        PIPE_DECLARATION_EXPORT_ARRAY
+        PIPE_DECLARATION_EXPORT_ARRAY        
     ],
     imports: [IMPORT_EXPORT_ARRAY],
     exports: [
@@ -65,6 +72,7 @@ const PROVIDER_ARRAY = [
         DIRECTIVE_DECLARATION_EXPORT_ARRAY,
         PIPE_DECLARATION_EXPORT_ARRAY
     ],
-    providers:[PROVIDER_ARRAY]
+    providers: [PROVIDER_ARRAY],
+    entryComponents: [ENTY_COMPONENT_ARRAY]
 })
 export class ChickenModule {}
